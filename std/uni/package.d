@@ -1709,35 +1709,35 @@ alias sharSwitchLowerBound = sharMethod!switchUniformLowerBound;
 @trusted size_t genericReplace(Policy=void, T, Range)
     (ref T dest, size_t from, size_t to, Range stuff)
 {
-    import std.algorithm.mutation : copy;
+    // import std.algorithm.mutation : copy;
     size_t delta = to - from;
     size_t stuff_end = from+stuff.length;
-    if (stuff.length > delta)
-    {// replace increases length
-        delta = stuff.length - delta;// now, new is > old  by delta
-        static if (is(Policy == void))
-            dest.length = dest.length+delta;//@@@BUG lame @property
-        else
-            dest = Policy.realloc(dest, dest.length+delta);
-        copyBackwards(dest[to .. dest.length-delta],
-            dest[to+delta .. dest.length]);
-        copyForward(stuff, dest[from .. stuff_end]);
-    }
-    else if (stuff.length == delta)
-    {
-        copy(stuff, dest[from .. to]);
-    }
-    else
-    {// replace decreases length by delta
-        delta = delta - stuff.length;
-        copy(stuff, dest[from .. stuff_end]);
-        copyForward(dest[to .. dest.length],
-            dest[stuff_end .. dest.length-delta]);
-        static if (is(Policy == void))
-            dest.length = dest.length - delta;//@@@BUG lame @property
-        else
-            dest = Policy.realloc(dest, dest.length-delta);
-    }
+    // if (stuff.length > delta)
+    // {// replace increases length
+    //     delta = stuff.length - delta;// now, new is > old  by delta
+    //     static if (is(Policy == void))
+    //         dest.length = dest.length+delta;//@@@BUG lame @property
+    //     else
+    //         dest = Policy.realloc(dest, dest.length+delta);
+    //     copyBackwards(dest[to .. dest.length-delta],
+    //         dest[to+delta .. dest.length]);
+    //     copyForward(stuff, dest[from .. stuff_end]);
+    // }
+    // else if (stuff.length == delta)
+    // {
+    //     copy(stuff, dest[from .. to]);
+    // }
+    // else
+    // {// replace decreases length by delta
+    //     delta = delta - stuff.length;
+    //     copy(stuff, dest[from .. stuff_end]);
+    //     copyForward(dest[to .. dest.length],
+    //         dest[stuff_end .. dest.length-delta]);
+    //     static if (is(Policy == void))
+    //         dest.length = dest.length - delta;//@@@BUG lame @property
+    //     else
+    //         dest = Policy.realloc(dest, dest.length-delta);
+    // }
     return stuff_end;
 }
 
@@ -2588,25 +2588,30 @@ public:
 
         See the '!' $(LREF opUnary) for the same but using operators.
     */
+    size_t someFunc()(int[] stuff)
+    {
+        return stuff.length;
+    }
     @property auto inverted()
     {
         InversionList inversion = this;
-        if (inversion.data.length == 0)
-        {
-            inversion.addInterval(0, lastDchar+1);
-            return inversion;
-        }
-        if (inversion.data[0] != 0)
-            genericReplace(inversion.data, 0, 0, [0]);
-        else
-            genericReplace(inversion.data, 0, 1, cast(uint[]) null);
-        if (data[data.length-1] != lastDchar+1)
-            genericReplace(inversion.data,
-                inversion.data.length, inversion.data.length, [lastDchar+1]);
-        else
-            genericReplace(inversion.data,
-                inversion.data.length-1, inversion.data.length, cast(uint[]) null);
-
+        // if (inversion.data.length == 0)
+        // {
+        //     inversion.addInterval(0, lastDchar+1);
+        //     return inversion;
+        // }
+        // if (inversion.data[0] != 0)
+            // genericReplace(inversion.data, 0, 0, [21]);
+        someFunc([21]);
+        // else
+            // genericReplace(inversion.data, 0, 1, cast(uint[]) null);
+        // if (data[data.length-1] != lastDchar+1)
+            // genericReplace(inversion.data,
+            //     inversion.data.length, inversion.data.length, [lastDchar+1]);
+        // else
+        //     genericReplace(inversion.data,
+        //         inversion.data.length-1, inversion.data.length, cast(uint[]) null);
+        //
         return inversion;
     }
 
